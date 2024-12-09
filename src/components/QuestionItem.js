@@ -1,18 +1,8 @@
-import React, { useState } from "react";
 
-function QuestionItem({ question, onDelete, onUpdateCorrectIndex }) {
+import React from "react";
+
+function QuestionItem({ question, onDeleteClick, onAnswerChange }) {
   const { id, prompt, answers, correctIndex } = question;
-  const [selectedIndex, setSelectedIndex] = useState(correctIndex);
-
-  const handleDelete = () => {
-    onDelete(id);
-  };
-
-  const handleCorrectIndexChange = (event) => {
-    const newIndex = parseInt(event.target.value, 10);
-    setSelectedIndex(newIndex);
-    onUpdateCorrectIndex(id, newIndex);
-  };
 
   const options = answers.map((answer, index) => (
     <option key={index} value={index}>
@@ -20,17 +10,25 @@ function QuestionItem({ question, onDelete, onUpdateCorrectIndex }) {
     </option>
   ));
 
+  function handleDeleteClick() {
+    onDeleteClick(id);
+  }
+
+  function handleAnswerChange(event) {
+    onAnswerChange(id, parseInt(event.target.value, 10));
+  }
+
   return (
     <li>
       <h4>Question {id}</h4>
       <h5>Prompt: {prompt}</h5>
       <label>
         Correct Answer:
-        <select value={selectedIndex} onChange={handleCorrectIndexChange}>
+        <select defaultValue={correctIndex} onChange={handleAnswerChange}>
           {options}
         </select>
       </label>
-      <button onClick={handleDelete}>Delete Question</button>
+      <button onClick={handleDeleteClick}>Delete Question</button>
     </li>
   );
 }
